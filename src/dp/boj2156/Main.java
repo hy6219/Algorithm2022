@@ -1,6 +1,5 @@
 package dp.boj2156;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
