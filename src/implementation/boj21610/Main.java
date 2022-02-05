@@ -115,6 +115,7 @@ public class Main {
         //다음위치=현재위치+방향*a
         for(int i = 0; i <clouds.size();i++){
             Cloud now = clouds.get(i);
+            //https://zoosso.tistory.com/933
             nr = (now.r +N+dir[d][0]*(s%N))%N;
             nc = (now.c +N+dir[d][1]*(s%N))%N;
 
