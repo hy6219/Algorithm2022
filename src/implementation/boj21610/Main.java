@@ -28,12 +28,22 @@ public class Main {
         }
     }
 
+    static class Cloud{
+        int r;
+        int c;
+
+        public Cloud(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
+    }
+
     static Scanner scanner;
     static int N, M;
-    static int[][] water;//물양
-    static boolean[][] visit;//구름이 제거된 위치 확인(true)
-    static boolean[][] cloud;//구름이 현재 위치한 곳 체크(true)
+    static int[][] plot;//물양
+    static List<Cloud> clouds;
     static List<Command> commands;
+    static boolean[][] visit;//구름이 제거된 위치 확인(true)
     static int[][] dir = {
             {0, -1},
             {-1, -1},
@@ -51,173 +61,133 @@ public class Main {
         N = scanner.nextInt();
         M = scanner.nextInt();
 
-        water = new int[N][N];
-        visit = new boolean[N][N];
-        cloud = new boolean[N][N];
-
+        plot = new int[N][N];
+        clouds = new LinkedList<>();
         commands = new LinkedList<>();
+        visit =new boolean[N][N];
+        /*
+         *초기위치
+         */
+        clouds.add(new Cloud(N-1,0));
+        clouds.add(new Cloud(N-1,1));
+        clouds.add(new Cloud(N-2,0));
+        clouds.add(new Cloud(N-2,1));
 
-        for (int row = 0; row < N; row++) {
-            for (int col = 0; col < N; col++) {
-                //처음 구름위치 잡기
-                boolean cloudChk = initCloudPosition(row, col);
-                water[row][col] = scanner.nextInt();//물양
-                cloud[row][col] = cloudChk;
+        //물양 입력받기
+        for(int i = 0 ; i < N; i++){
+            for(int j = 0 ; j < N; j++){
+                plot[i][j] = scanner.nextInt();
             }
         }
 
-        for (int cmd = 0; cmd < M; cmd++) {
+        //d,s입력받아 저장!
+        for(int i = 0 ; i < M; i++){
             commands.add(new Command(scanner.nextInt(), scanner.nextInt()));
         }
-
     }
 
-    static void doRepeatJob() {
-        int turn = 0;
-        while (turn < M) {
-            doThisTurn(turn++);
+    static void work(){
+        for(int i = 0; i < M; i++){
+            int di = commands.get(i).di-1;
+            int si = commands.get(i).si;
+            visit = new boolean[N][N];
+            //1.모든 구름이 di 방향으로 si 만큼 이동
+            move(di,si);
+            //2.각 구름이 있는 칸의 물 양을 1 증가
+            rain();
+            //4.물복사마법
+            copyWater();
+            //3.모든 구름 제거==>사실상 다른 작업도 해야해서 4다음에 실행!
+            clouds.clear();
+            //5.새롭게 구름 위치시키기(>=2)
+            makeNewClouds();
         }
     }
 
     /**
-     * M번의 이동이 모두 끝난 후 바구니에 들어있는 물의 양의 합 구하기
-     *
-     * @return
+     * 1.모든 구름이 di 방향으로 si 만큼 이동
+     * @param d
+     * @param s
      */
-    static int getTotalWater() {
+    static void move(int d, int s){
+        int nr=0, nc =0;
+        //길이가 N보다 크게될 경우도 존재 -> s=s%N==>a
+        //다음위치=현재위치+방향*a
+        for(int i = 0; i <clouds.size();i++){
+            Cloud now = clouds.get(i);
+            nr = (now.r +N+dir[d][0]*(s%N))%N;
+            nc = (now.c +N+dir[d][1]*(s%N))%N;
+
+            //위치 이동시켜주기!
+            now.r=nr;
+            now.c=nc;
+        }
+    }
+
+    //2.각 구름이 있는 칸의 물 양을 1 증가
+    static void rain(){
+        for(int i = 0 ; i <clouds.size();i++){
+            Cloud now = clouds.get(i);
+            int r = now.r;
+            int c = now.c;
+
+            plot[r][c]++;
+            //해당 칸 구름 제거
+            visit[r][c]=true;
+        }
+    }
+
+    /**
+     * 4.물복사마법
+     */
+    static void copyWater(){
+        for(int i = 0; i < clouds.size();i++){
+            Cloud now = clouds.get(i);
+            int cnt =0;
+            int nr = 0, nc =0;
+            //대각선은 1,3,5,7에만 존재
+            for(int di = 1; di < dir.length;di+=2){
+                nr = now.r + dir[di][0];
+                nc = now.c+dir[di][1];
+
+                if(nr < 0 || nc <0 || nr >= N || nc >=N) continue;
+                if(plot[nr][nc] <=0) continue;
+                cnt++;
+            }
+            plot[now.r][now.c]+=cnt;
+        }
+    }
+
+    /**
+     * 5.새롭게 구름 위치시키기(>=2)
+     */
+    static void makeNewClouds(){
+        for(int i = 0 ; i < N;i++){
+            for(int j = 0 ; j <N; j++){
+                if(plot[i][j] >= 2 && !visit[i][j]){
+                    plot[i][j]-=2;
+                    clouds.add(new Cloud(i,j));
+                }
+            }
+        }
+    }
+    
+    static int count(){
         int sum = 0;
 
-        System.out.println("water: " + Arrays.deepToString(water));
-        for (int row = 0; row < N; row++) {
-            for (int col = 0; col < N; col++) {
-                sum += water[row][col];
+        for(int i = 0 ; i < N; i++){
+            for(int j = 0; j <N ;j++){
+                sum+= plot[i][j];
             }
         }
 
         return sum;
     }
 
-    static boolean initCloudPosition(int row, int col) {
-        if ((row == N - 1 || row == N - 2) && (col == 0 || col == 1)) return true;
-        return false;
-    }
-
-    /**
-     * 매회 반복
-     *
-     * @param turn
-     */
-    static void doThisTurn(int turn) {
-        //현재 구름이 있는 칸에서 di방향으로 si만큼 이동
-        //-구름이 있는 칸을 찾고, di 방향으로 이동
-        for (int row = 0; row < N; row++) {
-            for (int col = 0; col < N; col++) {
-                if (cloud[row][col] && !visit[row][col]) {
-                    //row 혹은 col+commands.get(turn).di*si 이동(단, 0과 N-1은 연결됨)
-                    directionMove(row, col, turn);
-                }
-            }
-        }
-        //현재 구름이 있는 칸에서 비내리기(b)
-        List<int[]> plots = new LinkedList<>();//비 내리는 위치 기록
-        for (int row = 0; row < N; row++) {
-            for (int col = 0; col < N; col++) {
-                if (cloud[row][col] && !visit[row][col]) {
-                    plots.add(new int[]{row, col});//좌표기록
-                    ++water[row][col];
-                    //구름 모두 제거
-                    visit[row][col] = true;
-                }
-            }
-        }
-        //물복사마법 for b 좌표들
-        for (int i = 0; i < plots.size(); i++) {
-            int[] p = plots.get(i);
-            //물복사마법 진행
-            copyWaterMagic(p[0], p[1]);
-        }
-        //visit[][] == false && 물양 >=2 인 모든곳에 cloud[][] = true 처리,물양-2
-        makeNewCloud();
-    }
-
-    /**
-     * row 혹은 col+commands.get(turn).di*si 이동
-     *
-     * @param row
-     * @param col
-     * @param turn
-     */
-    static void directionMove(int row, int col, int turn) {
-        Command next = commands.get(turn);
-        //https://zoosso.tistory.com/933 - N*N 행렬탐색에서 끝과 끝이 연결되는 경우
-        int nr = row + +N + (dir[next.di - 1][0] * (next.si % N));
-        int nc = col + N + (dir[next.di - 1][1] * (next.si % N));
-
-        if(nr<0) nr+=N;
-        if(nc<0) nr+=N;
-        if(nr>=N) nr%=N;
-        if(nc>=N) nc%=N;
-
-        //이동한 칸의 cloud[][]값 설정해주기
-        cloud[nr][nc] = true;
-        //이동한 칸의 물양 1증가
-        ++water[nr][nc];
-    }
-
-    /**
-     * 좌표 내에서 움직일 수 있는지 확인
-     *
-     * @param row
-     * @param col
-     * @return
-     */
-    static boolean rangeCheck(int row, int col) {
-        return (row >= 0 && row < N && col >= 0 && col < N);
-    }
-
-    /**
-     * 물복사마법은 dir배열의 1,3,5,7 인덱스를 활용
-     *
-     * @param row
-     * @param col
-     */
-    static void copyWaterMagic(int row, int col) {
-        int nr = 0;
-        int nc = 0;
-        int cnt = 0;
-
-        for (int d = 1; d < dir.length; d += 2) {
-            nr = row + dir[d][0];
-            nc = col + dir[d][1];
-
-            if (!rangeCheck(nr, nc)) continue;//범위에 맞지 않음!!(좌표)<-이때는 이동과 다르게 경계를 넘어가는 칸은 대각선 방향으로 거리가 1인 칸이 아니다.
-            if (water[nr][nc] <= 0) continue;
-            //해당칸 물양 1증가
-            cnt++;
-        }
-        water[row][col] += cnt;
-    }
-
-    /**
-     * visit[][] == false && 물양 >=2 인 모든곳에 cloud[][] = true 처리&&
-     * 물양-2
-     */
-    static void makeNewCloud() {
-        for (int row = 0; row < N; row++) {
-            for (int col = 0; col < N; col++) {
-                if (!visit[row][col] && water[row][col] >= 2) {
-                    cloud[row][col] = true;
-                    water[row][col] -= 2;
-                }
-            }
-        }
-    }
-
-    static void pro() {
+    static void pro(){
         input();
-        doRepeatJob();
-        //M번의 이동이 모두 끝난 후 바구니에 들어있는 물의 양의 합 구하기
-        System.out.println(getTotalWater());
+        work();
+        System.out.println(count());
     }
 
     public static void main(String[] args) {
