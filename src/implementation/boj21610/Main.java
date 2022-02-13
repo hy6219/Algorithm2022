@@ -1,6 +1,5 @@
 package implementation.boj21610;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -66,7 +65,7 @@ public class Main {
         commands = new LinkedList<>();
         visit =new boolean[N][N];
         /*
-         *초기위치
+         *초기위치(왼쪽하단 모퉁이)
          */
         clouds.add(new Cloud(N-1,0));
         clouds.add(new Cloud(N-1,1));
@@ -115,7 +114,19 @@ public class Main {
         //다음위치=현재위치+방향*a
         for(int i = 0; i <clouds.size();i++){
             Cloud now = clouds.get(i);
-            //https://zoosso.tistory.com/933
+            /*
+             nr = (now.r +N+dir[d][0]*(s%N))%N;는
+            https://zoosso.tistory.com/933 참조(PS: 연결되는 행렬)
+            ==>1. 이동하는 칸 갯수는 N보다 클 수 있기 때문에 실제 이동은 (s 거리%N)만큼 이동
+            2.왼쪽으로 이동한다던지,윗쪽으로 이동하면 음수가 발생될수 있어서 절댓값처리처럼
+            N+"1"*방향(==>negative방향)을 진행해주고,2까지 진행된 결과를 N으로 나누어줄것
+            (또 N으로 나누는 것은 보드크기를 넘어갈 경우를 막기 위함)
+
+            -->예: N=10,(2,2)에서 좌측으로 5칸 이동
+            ----->(2,7)로 이동-->열: (2+10+(5%10)*(-1))%10 =7
+
+            ==>next=(current+N+dir*(이동할 거리%N))%N
+             */
             nr = (now.r +N+dir[d][0]*(s%N))%N;
             nc = (now.c +N+dir[d][1]*(s%N))%N;
 
