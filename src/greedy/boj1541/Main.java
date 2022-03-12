@@ -1,4 +1,4 @@
-package datastructure.stack.boj1541;
+package greedy.boj1541;
 
 import java.util.Scanner;
 
