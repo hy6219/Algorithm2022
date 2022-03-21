@@ -55,3 +55,7 @@ R
 "src/greedy/prms92334/Solution.java,3\d\3dcc25c049bab3d2f6edb9ce23dad9446722db6f
 U
 %src/greedy/prms92334/Solution_Re.java,f\c\fc58d3bd8a07689857016be94ad30bc82f9bdbd9
+S
+#src/greedy/prgms12931/Solution.java,8\a\8a060ea5e26f7c67e01eb62c4196c7a8653d12f9
+S
+#src/greedy/prgms12934/Solution.java,5\b\5bcdd9fb45567bd565554f43ca8ac6d0caf7e0f8
