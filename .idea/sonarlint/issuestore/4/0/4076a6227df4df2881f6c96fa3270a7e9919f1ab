@@ -1,0 +1,11 @@
+
+g
+java:S3008"LRename this field "N" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ûîèõşÿÿÿÿ
+o
+java:S3776S"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(²ù¿–8¦Šœøõ/
+B
+java:S1905¬"&Remove this unnecessary cast to "int".( Àà‡ıÿÿÿÿ
+s	java:S135\"YReduce the total number of break and continue statements in this loop to use at most one.(ı­Ïüÿÿÿÿ
+{	java:S135"YReduce the total number of break and continue statements in this loop to use at most one.(ı­Ïüÿÿÿÿ8®Šœøõ/
+a
+java:S2184±"ECast one of the operands of this subtraction operation to a "double".(Ë’şùÿÿÿÿ
