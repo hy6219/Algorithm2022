@@ -59,3 +59,9 @@ S
 #src/greedy/prgms12931/Solution.java,8\a\8a060ea5e26f7c67e01eb62c4196c7a8653d12f9
 S
 #src/greedy/prgms12934/Solution.java,5\b\5bcdd9fb45567bd565554f43ca8ac6d0caf7e0f8
+R
+"src/prgms/prgms12935/Solution.java,b\6\b65b5130885a09663e500d36c03a6d6c2fc6f8ca
+S
+#src/prgms/prgms12935/Solution2.java,5\0\5020f38aae030fb89dc8df847af25aa384b02139
+R
+"src/prgms/prgms12940/Solution.java,c\f\cf7ff7270457fa157bab4c1370120758e2a18d03

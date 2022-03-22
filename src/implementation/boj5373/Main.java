@@ -90,7 +90,7 @@ public class Main {
             } else if (plane == 'D') {
                 /*(아랫면)
             아랫면과 인접한 왼쪽, 앞쪽, 뒷쪽, 오른쪽이 돌아가게 됨
-            (시계)- 앞쪽->왼쪽, 오른쪽->앞쪽, 뒷쪽->오른쪽, 왼쪽->뒷쪽
+            (시계)- 앞쪽->오른쪽, 오른쪽->뒷쪽, 뒷쪽->왼쪽, 왼쪽->앞쪽
             -아랫면:
             (0,0) (0,1) (0,2)     (2,0) (1,0) (0,0)
             (1,0) (1,1) (1,2) ➡  (2,1) (1,1) (0,1)
@@ -111,17 +111,17 @@ public class Main {
                 }
 
 
-                //앞쪽->왼쪽, 오른쪽->앞쪽, 뒷쪽->오른쪽, 왼쪽->뒷쪽
+                //앞쪽->오른쪽, 오른쪽->뒷쪽, 뒷쪽->왼쪽, 왼쪽->앞쪽
                 char[] temp2 = new char[3];
                 for(int i = 0 ; i < 3; i++){
                     temp2[i] = front[2][i];
                 }
 
                 for (int i = 0; i < 3; i++) {
-                    front[2][i] = right[2][i];
-                    right[2][i] = back[2][i];
-                    back[2][i] = left[2][i];
-                    left[2][i] = temp2[i];
+                    front[2][i] = left[2][i];
+                    left[2][i] = back[2][i];
+                    back[2][i] = right[2][i];
+                    right[2][i] = temp2[i];
                 }
 
             } else if (plane == 'F') {
@@ -220,23 +220,23 @@ public class Main {
                 }
 
 
-              //윗쪽 ➡ 앞쪽, 앞쪽➡아랫쪽, 아랫쪽➡뒷쪽, 뒷쪽➡윗쪽,
+                //윗쪽 ➡ 앞쪽, 앞쪽➡아랫쪽, 아랫쪽➡뒷쪽, 뒷쪽➡윗쪽,
                 char[] temp2 = new char[3];
                 for(int i = 0 ; i < 3; i++){
                     temp2[i] = up[i][0];
                 }
 
-               for(int i = 0 ; i < 3; i++){
-                   //back(0,2)->up(2,0), back(1,2)->up(1,0), back(2,2)->up(0,0)
-                   up[i][0] = back[2-i][2];
-                   //down(0,0)->back(2,2), down(1,0)->back(1,2), down(2,0)->back(0,2)
-                   back[2-i][2] = down[i][0];
-                   //front(0,0)->down(2,0), front(1,0)->down(1,0) , front(2,0)->down(0,0)
-                   down[i][0] = front[i][0];
-                   //up(0,0)->front(0,0), up(1,0)->front(1,0), up(2,0)->front(2,0)
-                   front[i][0] = temp2[i];
+                for(int i = 0 ; i < 3; i++){
+                    //back(0,2)->up(2,0), back(1,2)->up(1,0), back(2,2)->up(0,0)
+                    up[i][0] = back[2-i][2];
+                    //down(0,0)->back(2,2), down(1,0)->back(1,2), down(2,0)->back(0,2)
+                    back[2-i][2] = down[i][0];
+                    //front(0,0)->down(2,0), front(1,0)->down(1,0) , front(2,0)->down(0,0)
+                    down[i][0] = front[i][0];
+                    //up(0,0)->front(0,0), up(1,0)->front(1,0), up(2,0)->front(2,0)
+                    front[i][0] = temp2[i];
 
-               }
+                }
 
             }else if(plane == 'R'){
                 /*(오른쪽면)
