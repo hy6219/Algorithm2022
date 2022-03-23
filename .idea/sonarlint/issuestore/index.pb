@@ -41,8 +41,6 @@ H
 src/dp/boj1003/Main.java,d\3\d30f51d4acb4dc1f2da485325b7212dab56092aa
 I
 src/bfs/boj1326/Main.java,3\5\35e4944b258703af6e9c4c45cad8fb442dcf6b6b
-I
-src/dfs/boj1012/Main.java,4\5\45c2efff02973b1affe6ca0a408f45ff4c608065
 L
 src/greedy/boj1541/Main.java,b\1\b1da6e688b080b61f2f31ca48cbadb66fdf3d529
 Q
