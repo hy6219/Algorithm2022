@@ -63,3 +63,9 @@ S
 #src/prgms/prgms12935/Solution2.java,5\0\5020f38aae030fb89dc8df847af25aa384b02139
 R
 "src/prgms/prgms12940/Solution.java,c\f\cf7ff7270457fa157bab4c1370120758e2a18d03
+R
+"src/prgms/prgms12950/Solution.java,1\7\178e6d63b024e20105ecfd513781c8aed48b88b9
+S
+#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
+I
+src/bfs/boj2151/Main.java,f\b\fb82aa1f623a30e63571d552ca63e30e6d6036bf

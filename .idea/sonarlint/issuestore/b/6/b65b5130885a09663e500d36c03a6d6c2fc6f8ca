@@ -1,0 +1,7 @@
+
+i
+java:S1602"SRemove useless curly braces around statement and then remove useless return keyword(î•Úý
+y
+java:S1488"^Immediately return this expression instead of assigning it to the temporary variable "answer".(ùæÕÝúÿÿÿÿ
+f
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(î•Úý
