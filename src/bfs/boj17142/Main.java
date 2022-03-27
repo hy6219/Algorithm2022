@@ -38,7 +38,7 @@ public class Main {
             {0, -1},
             {0, 1}
     };
-    static boolean isEmptyExist;
+
     static int MIN_TIME = Integer.MAX_VALUE;
     static LinkedList<Virus> virusList;
     static ArrayList<Integer> selected;
@@ -66,9 +66,6 @@ public class Main {
 
                 map[i][j] = num;
 
-                if (num == 0) {
-                    isEmptyExist  = true;
-                }
                 if (num == 2) {
                     virusList.add(new Virus(i, j, 3));
                 }
