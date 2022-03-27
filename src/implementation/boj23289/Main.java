@@ -148,7 +148,7 @@ public class Main {
     }
 
     static class Room{
-        int hot; //temp는 임시같고, temperature는 너무 길고..
+        int hot;
         boolean[] isWalled;
 
         public Room() {
@@ -191,10 +191,10 @@ public class Main {
                     queue.add(new Node(nx, ny, node.remain - 1));
                 }
 
-                int nx2, ny2;//nx, nx2에 대한 설명은 아래 코드 해설의 그림 참조
+                int nx2, ny2;
                 nx = node.x + dx[forLeft]; nx2 = nx + dx[forward];
                 ny = node.y + dy[forLeft]; ny2 = ny + dy[forward];
-                if(valid(nx, ny) && valid(nx2, ny2) && !visited[nx2][ny2]) {//가려는 좌표가 모두 유효한 좌표인지 체크 + 이미 바람이 전파된 곳인지 체크
+                if(valid(nx, ny) && valid(nx2, ny2) && !visited[nx2][ny2]) {
                     if(!board[node.x][node.y].isWalled[forLeft] && !board[nx][ny].isWalled[forward]) {//벽 쳐져있는지 여부 체크
                         visited[nx2][ny2] = true;
                         queue.add(new Node(nx2, ny2, node.remain - 1));
