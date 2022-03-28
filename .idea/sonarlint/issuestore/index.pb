@@ -69,3 +69,5 @@ S
 #.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 I
 src/bfs/boj2151/Main.java,f\b\fb82aa1f623a30e63571d552ca63e30e6d6036bf
+Q
+!src/bruteforce/boj14888/Main.java,5\4\54a0a363905d43d13f92bedff31327f7b232a531
