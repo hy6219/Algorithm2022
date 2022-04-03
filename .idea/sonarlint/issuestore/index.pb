@@ -65,9 +65,13 @@ R
 "src/prgms/prgms12940/Solution.java,c\f\cf7ff7270457fa157bab4c1370120758e2a18d03
 R
 "src/prgms/prgms12950/Solution.java,1\7\178e6d63b024e20105ecfd513781c8aed48b88b9
-S
-#.idea/sonarlint/issuestore/index.pb,9\f\9fe84ebb15faf917b7def6236dba604453cc61e0
 I
 src/bfs/boj2151/Main.java,f\b\fb82aa1f623a30e63571d552ca63e30e6d6036bf
 Q
 !src/bruteforce/boj14888/Main.java,5\4\54a0a363905d43d13f92bedff31327f7b232a531
+Q
+!src/bruteforce/boj14889/Main.java,7\9\796c686616fd45a15bc406775c16ae1db4a8be7d
+T
+$src/implementation/boj5373/Main.java,9\b\9bb575a65e4b1864fa709b328ca7a0e2302cddfc
+I
+src/dfs/boj2644/Main.java,5\d\5dbc052fd8986b04640d5c26a364dc00c9e2fee2

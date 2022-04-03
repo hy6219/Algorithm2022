@@ -1,0 +1,29 @@
+
+h
+java:S3008¶"LRename this field "T" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õôÀÅüÿÿÿÿ
+h
+java:S3008¶"LRename this field "K" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(õôÀÅüÿÿÿÿ
+;
+java:S1659¶"Declare "K" on a separate line.(õôÀÅüÿÿÿÿ
+m
+java:S37764"RRefactor this method to reduce its Cognitive Complexity from 90 to the 15 allowed.(¾Š‚€úÿÿÿÿ
+o
+java:S3012I"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ºİŠ—
+t
+java:S3012P"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ıı´œúÿÿÿÿ
+t
+java:S3012m"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(„Àµóşÿÿÿÿ
+o
+java:S3012u"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(Èâçæ
+p
+java:S3012’"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ˆØè
+p
+java:S3012™"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(†àûï
+p
+java:S3012¶"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ªñé
+p
+java:S3012¾"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ÿ”ûÓ
+p
+java:S3012Ú"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(°ºğí
+p
+java:S3012…"YUse "Arrays.copyOf", "Arrays.asList", "Collections.addAll" or "System.arraycopy" instead.(ö¿¶®
