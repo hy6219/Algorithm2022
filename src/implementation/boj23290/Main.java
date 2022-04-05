@@ -113,7 +113,7 @@ public class Main {
         sc = Integer.parseInt(st.nextToken());
 
         //마법시전시도횟수
-        int trial = 0;
+        int trial = 1;
 
         while (trial <= s) {
             //1.복제마법시작 전 배열 복사
@@ -127,7 +127,7 @@ public class Main {
             //5.copyMagic
             copyMagic();
             //6.copyMap결과 옮겨주기
-            copy(copyMap,map,trial);
+            copy(copyMap, map, trial);
             trial++;
         }
         System.out.println("map: " + Arrays.deepToString(map));
@@ -172,6 +172,7 @@ public class Main {
                 int c = j;
                 List<Fish> fishes = copyMap[r][c].fishes;
 
+                if(fishes == null) continue;
                 for (int k = 1; k < fishes.size(); k++) {
                     Fish fish = fishes.get(k);
 
@@ -188,7 +189,15 @@ public class Main {
                         fish.r = nr;
                         fish.c = nc;
                         fish.d = l;
-                        copyMap[nr][nc].fishes.add(fish);
+
+                        if(copyMap[nr][nc].fishes == null){
+                            List<Fish> fishList = new ArrayList<>();
+                            fishList.add(fish);
+                            copyMap[nr][nc].fishes =fishList;
+                        }else{
+                            copyMap[nr][nc].fishes.add(fish);
+                        }
+
                         //탈출
                         break;
                     }
@@ -208,20 +217,21 @@ public class Main {
                 {0, 1}
         };
 
-        for (int i = 0; i < 4; i++) {
-            int nr = sr + d[i][0] * 3;
-            int nc = sc + d[i][1] * 3;
+        for (int move = 0; move < 3; move++) {
+            for (int i = 0; i < 4; i++) {
+                int nr = sr + d[i][0];
+                int nc = sc + d[i][1];
 
-            if (nr < 1 || nc < 1 || nr > 4 || nc > 4) continue;
+                if (nr < 1 || nc < 1 || nr > 4 || nc > 4) continue;
 
-            //해당 칸에 물고기가 있다면 그 물고기는 격자에서 제거되고,냄새를 남김
-            List<Fish> fishes = copyMap[nr][nc].fishes;
-            if (fishes.isEmpty()) continue;
+                //해당 칸에 물고기가 있다면 그 물고기는 격자에서 제거되고,냄새를 남김
+                List<Fish> fishes = copyMap[nr][nc].fishes;
 
-            copyMap[nr][nc].fishes = null;
+                copyMap[nr][nc].fishes = null;
 
-            sr = nr;
-            sc = nc;
+                sr = nr;
+                sc = nc;
+            }
         }
     }
 
@@ -237,11 +247,11 @@ public class Main {
     }
 
     //5. copyMagic 복제마법
-    static void copyMagic(){
-        for(int i = 1; i <= 4; i++){
-            for(int j = 1; j <= 4; j++){
+    static void copyMagic() {
+        for (int i = 1; i <= 4; i++) {
+            for (int j = 1; j <= 4; j++) {
                 List<Fish> fishes = copyMap[i][j].fishes;
-                if(fishes == null || fishes.isEmpty()) continue;
+                if (fishes == null || fishes.isEmpty()) continue;
                 copyMap[i][j].fishes.addAll(fishes);
             }
         }
