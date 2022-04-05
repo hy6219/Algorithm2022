@@ -37,21 +37,21 @@ public class Main {
 
     static class Board {
         private List<Fish> fishes;
-        private int smell;
+        private List<Integer> smells;
 
         public Board() {
         }
 
-        public Board(List<Fish> fishes, int smell) {
+        public Board(List<Fish> fishes, List<Integer> smells) {
             this.fishes = fishes;
-            this.smell = smell;
+            this.smells = smells;
         }
 
         @Override
         public String toString() {
             return "Board{" +
                     "fishes=" + fishes +
-                    ", smell=" + smell +
+                    ", smells=" + smells +
                     '}';
         }
     }
@@ -88,8 +88,9 @@ public class Main {
                 map[i][j] = new Board();
                 copyMap[i][j] = new Board();
                 map[i][j].fishes = new ArrayList<>();
+                map[i][j].smells = new ArrayList<>();
                 copyMap[i][j].fishes = new ArrayList<>();
-
+                copyMap[i][j].smells = new ArrayList<>();
             }
         }
 
@@ -103,7 +104,10 @@ public class Main {
             List<Fish> fishes = map[r][c].fishes;
             fishes.add(fish);
 
-            map[r][c] = new Board(fishes, fish.smell);
+            List<Integer> smells = map[r][c].smells;
+            smells.add(0);
+
+            map[r][c] = new Board(fishes, smells);
         }
 
 
@@ -113,11 +117,11 @@ public class Main {
         sc = Integer.parseInt(st.nextToken());
 
         //마법시전시도횟수
-        int trial = 1;
+        int trial = 0;
 
         while (trial <= s) {
             //1.복제마법시작 전 배열 복사
-            copy(map, copyMap, trial);
+            copy(map, copyMap);
             //2.모든 물고기 1칸 이동
             moveFishes();
             //3.상어3칸이동
@@ -127,7 +131,7 @@ public class Main {
             //5.copyMagic
             copyMagic();
             //6.copyMap결과 옮겨주기
-            copy(copyMap, map, trial);
+            copy(copyMap, map);
             trial++;
         }
         System.out.println("map: " + Arrays.deepToString(map));
@@ -147,18 +151,17 @@ public class Main {
     }
 
     //1.이동하기 전 카피!
-    static void copy(Board[][] from, Board[][] to, int trial) {
+    static void copy(Board[][] from, Board[][] to) {
         for (int i = 1; i < from.length; i++) {
             for (int j = 1; j < to.length; j++) {
                 List<Fish> fishes = from[i][j].fishes;
                 List<Fish> temp = new ArrayList<>();
                 if (fishes == null || fishes.isEmpty()) continue;
                 for (Fish fish : fishes) {
-                    fish.smell = trial;
                     temp.add(fish);
                 }
                 to[i][j].fishes = temp;
-                to[i][j].smell = from[i][j].smell = trial;
+                to[i][j].smells = from[i][j].smells;
             }
         }
     }
@@ -183,7 +186,7 @@ public class Main {
                         //격자 범위 외는 이동 못합
                         if (nr <= 0 || nc <= 0 || nr > 4 || nc > 4) continue;
                         //냄새가 있는 칸으로 이동 못함
-                        if (copyMap[nr][nc].smell > 0) continue;
+                        if (copyMap[nr][nc].smells != null || !copyMap[nr][nc].smells.isEmpty()) continue;
 
                         //물고기 이동
                         fish.r = nr;
@@ -227,7 +230,22 @@ public class Main {
                 //해당 칸에 물고기가 있다면 그 물고기는 격자에서 제거되고,냄새를 남김
                 List<Fish> fishes = copyMap[nr][nc].fishes;
 
-                copyMap[nr][nc].fishes = null;
+                //물고기를 먹은 칸에만 냄새를 남김
+                if(fishes != null && !fishes.isEmpty()){
+                    if(copyMap[nr][nc].smells == null || copyMap[nr][nc].smells.isEmpty()){
+                        copyMap[nr][nc].smells = new ArrayList<>();
+
+                        for(int z = 0 ; z < fishes.size();z++){
+                            copyMap[nr][nc].smells.add(fishes.get(z).smell);
+                        }
+                    }else{
+                        for(int z = 0 ; z < fishes.size();z++){
+                            copyMap[nr][nc].smells.add(fishes.get(z).smell);
+                        }
+                    }
+                }
+
+                copyMap[nr][nc].fishes.clear();
 
                 sr = nr;
                 sc = nc;
@@ -239,8 +257,8 @@ public class Main {
     static void removeSmell(int trial) {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
-                if (copyMap[i][j].smell == trial - 2) {
-                    copyMap[i][j].smell = 0;
+                if (copyMap[i][j].smells.contains(trial - 2)) {
+                    copyMap[i][j].smells.clear();
                 }
             }
         }
