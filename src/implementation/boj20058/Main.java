@@ -3,7 +3,10 @@ package implementation.boj20058;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -23,7 +26,7 @@ public class Main {
             {1, 0},
             {0, -1}
     };
-    static List<Integer> area;
+    static int max = Integer.MIN_VALUE;
 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,13 +37,11 @@ public class Main {
         len = (int) Math.pow(2, n);
         arr = new int[len][len];
         list = new ArrayList<>();
-        area = new ArrayList<>();
 
         for (int i = 0; i < len; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < len; j++) {
                 arr[i][j] = Integer.parseInt(st.nextToken());
-                iceTot += arr[i][j];
             }
         }
 
@@ -67,49 +68,34 @@ public class Main {
             meltIce();
         }
 
+        //얼음총합
+
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                if (arr[i][j] <= 0) continue;
+                iceTot += arr[i][j];
+            }
+        }
         //얼음 덩어리 가장 큰 곳 찾기
+        visited = new boolean[len][len];
         makeGroup();
         System.out.println(iceTot);
-        System.out.println(area.get(0));
+        System.out.println(max);
     }
 
     static void rotate(int x, int y, int size) {
+        //"2차원배열 시계방향 90도 회전" - https://redbinalgorithm.tistory.com/585
+        int[][] temp = new int[size][size];
 
-        int number = size / 2;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                temp[j][size - i - 1] = arr[i + x][j + y];
+            }
+        }
 
-        for (int n = 0; n < number; n++) {
-            int width = size - 2 * n;
-            int sx = x + n;
-            int sy = y + n;
-            int ex = x + size - n - 1;
-            int ey = y + size - n - 1;
-            int[] temp = new int[width - 1];
-
-            int idx = 0;
-            //우측 복사
-            for (int i = sx + 1; i <= ex; i++) {
-                temp[idx++] = arr[i][ey];
-            }
-            idx = sy + 1;
-            //윗변->우측
-            for (int i = sx + 1; i <= ex; i++) {
-                arr[i][ey] = arr[sx][idx++];
-            }
-            idx = ex - 1;
-            //왼쪽->윗측
-            for (int i = sy + 1; i <= ey; i++) {
-                arr[sx][i] = arr[idx--][sy];
-            }
-            idx = sy;
-            //아랫측->왼측
-            for (int i = sx; i < ex; i++) {
-                arr[i][sy] = arr[ex][idx++];
-            }
-
-            idx = temp.length - 1;
-            //우측->아랫변
-            for (int i = sy; i < ey; i++) {
-                arr[ex][i] = temp[idx--];
+        for (int i = x; i < x+size; i++) {
+            for (int j = y; j < y+size; j++) {
+                arr[i][j] = temp[i-x][j-y];
             }
         }
     }
@@ -127,14 +113,13 @@ public class Main {
                     int nc = j + dir[k][1];
 
                     if (nr < 0 || nc < 0 || nr >= len || nc >= len) continue;
-                    if (arr[nr][nc] == 0) continue;
+                    if (arr[nr][nc] <= 0) continue;
                     adj++;
                 }
 
                 //얼음 녹이기(얼음총합도 --)
                 if (adj < 3) {
                     arr[i][j]--;
-                    iceTot--;
                 }
             }
         }
@@ -142,21 +127,18 @@ public class Main {
 
     //얼음군집
     static void makeGroup() {
-        visited = new boolean[len][len];
-
-        area.add(0);//덩어리가 없는 경우를 위함
         for (int i = 0; i < len; i++) {
             for (int j = 0; j < len; j++) {
-                if (arr[i][j] == 0 || visited[i][j]) continue;
-                bfs(i, j);
+                if (visited[i][j]) continue;
+                if (arr[i][j] <= 0) continue;
+
+                int cnt = bfs(i, j);
+                max = Math.max(max, cnt);
             }
         }
-
-        //내림차순 정렬
-        Collections.sort(area, Collections.reverseOrder());
     }
 
-    static void bfs(int r, int c) {
+    static int bfs(int r, int c) {
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{r, c});
         visited[r][c] = true;
@@ -171,6 +153,7 @@ public class Main {
 
                 if (nr < 0 || nc < 0 || nr >= len || nc >= len) continue;
                 if (visited[nr][nc]) continue;
+                if (arr[nr][nc] <= 0) continue;
 
                 queue.add(new int[]{nr, nc});
                 visited[nr][nc] = true;
@@ -178,6 +161,6 @@ public class Main {
             }
         }
 
-        area.add(cnt);
+        return cnt;
     }
 }
