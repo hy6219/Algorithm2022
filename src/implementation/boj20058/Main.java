@@ -57,7 +57,11 @@ public class Main {
             //1.영역별로 회전시키기
             int size = (int) Math.pow(2, stage);
 
-            rotate(size);
+            for (int j = 0; j < len; j += size) {
+                for (int k = 0; k < len; k += size) {
+                    rotate(j, k, size);
+                }
+            }
 
             //2.얼음이 3개 이상인 칸과 인접하지 않은 칸은 얼음 1씩 녹이기
             meltIce();
@@ -69,26 +73,44 @@ public class Main {
         System.out.println(area.get(0));
     }
 
-    static void rotate(int size) {
-        int[][] map = new int[len][len];
+    static void rotate(int x, int y, int size) {
 
-        for (int i = 0; i < len; i += size) {
-            for (int j = 0; j < len; j += size) {
-                int sr = i;
-                int sc = j;
+        int number = size / 2;
 
-                for (int c = j; c < j + size; c++) {
-                    sc = j;
-                    for (int r = i + size - 1; r >= i; r--) {
-                        map[sr][sc++] = arr[r][c];
-                    }
-                    sr++;
-                }
+        for (int n = 0; n < number; n++) {
+            int width = size - 2 * n;
+            int sx = x + n;
+            int sy = y + n;
+            int ex = x + size - n - 1;
+            int ey = y + size - n - 1;
+            int[] temp = new int[width - 1];
+
+            int idx = 0;
+            //우측 복사
+            for (int i = sx + 1; i <= ex; i++) {
+                temp[idx++] = arr[i][ey];
             }
-        }
+            idx = sy + 1;
+            //윗변->우측
+            for (int i = sx + 1; i <= ex; i++) {
+                arr[i][ey] = arr[sx][idx++];
+            }
+            idx = ex - 1;
+            //왼쪽->윗측
+            for (int i = sy + 1; i <= ey; i++) {
+                arr[sx][i] = arr[idx--][sy];
+            }
+            idx = sy;
+            //아랫측->왼측
+            for (int i = sx; i < ex; i++) {
+                arr[i][sy] = arr[ex][idx++];
+            }
 
-        for (int i = 0; i < len; i++) {
-            arr[i] = map[i].clone();
+            idx = temp.length - 1;
+            //우측->아랫변
+            for (int i = sy; i < ey; i++) {
+                arr[ex][i] = temp[idx--];
+            }
         }
     }
 
@@ -122,17 +144,14 @@ public class Main {
     static void makeGroup() {
         visited = new boolean[len][len];
 
+        area.add(0);//덩어리가 없는 경우를 위함
         for (int i = 0; i < len; i++) {
             for (int j = 0; j < len; j++) {
-                //얼음이 없는 경우 스킵
-                if (arr[i][j] == 0) continue;
-                if (visited[i][j]) continue;
+                if (arr[i][j] == 0 || visited[i][j]) continue;
                 bfs(i, j);
             }
         }
 
-        //없는 경우대비
-        area.add(0);
         //내림차순 정렬
         Collections.sort(area, Collections.reverseOrder());
     }
