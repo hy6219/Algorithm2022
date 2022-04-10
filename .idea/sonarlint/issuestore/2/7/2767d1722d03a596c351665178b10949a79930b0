@@ -1,0 +1,9 @@
+
+U
+java:S1854
+":Remove this useless assignment to local variable "common".(„ÄÁ˜úÿÿÿÿ
+F
+java:S1481
+"+Remove this unused "common" local variable.(„ÄÁ˜úÿÿÿÿ
+C	java:S108")Either remove or fill this block of code.(£º¾âüÿÿÿÿ
+f	java:S117	"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒ³´í

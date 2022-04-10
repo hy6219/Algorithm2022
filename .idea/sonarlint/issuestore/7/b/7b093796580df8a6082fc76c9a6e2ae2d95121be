@@ -1,0 +1,28 @@
+
+v	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼§Ï¶8ãßÂÊü/
+v	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼§Ï¶8äßÂÊü/
+v	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼§Ï¶8äßÂÊü/
+v	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(¼§Ï¶8äßÂÊü/
+[
+java:S1659
+">Declare "c" and all following declarations on a separate line.(Ô€û‹8åßÂÊü/
+_
+java:S1659"BDeclare "right" and all following declarations on a separate line.(¼§Ï¶8åßÂÊü/
+t
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(¥™Şûÿÿÿÿÿ8ëßÂÊü/
+7
+java:S3626H"Remove this redundant jump.(°ü E8îßÂÊü/
+_
+java:S1126ˆ"AReplace this if-then-else statement by a single return statement.(š§èÏ8ôßÂÊü/
+B
+java:S1659¡"Declare "y" on a separate line.(¡Ê²‘şÿÿÿÿ8ößÂÊü/
+p
+java:S3776ª"RRefactor this method to reduce its Cognitive Complexity from 20 to the 15 allowed.(ƒ—“8÷ßÂÊü/
+D
+java:S1659Â"!Declare "ny2" on a separate line.(ŞŸóşÿÿÿÿ8øßÂÊü/
+a
+java:S1659Ù">Declare "y" and all following declarations on a separate line.(²šáıÿÿÿÿ8ûßÂÊü/
+M
+java:S1066Æ"/Merge this if statement with the enclosing one.(œ™ı„8üßÂÊü/
+R
+java:S1066Ï"/Merge this if statement with the enclosing one.(²´Ä…ûÿÿÿÿ8üßÂÊü/
