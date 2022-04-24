@@ -3,30 +3,36 @@ package implementation.boj20058;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
 
     static BufferedReader br;
     static StringTokenizer st;
-    static int n, q;
-    static int len;
-    static int[][] arr;
-    static boolean[][] visited;
-    //l명령
-    static ArrayList<Integer> list;
-    //얼음합
-    static int iceTot;
     static int[][] dir = {
             {-1, 0},
             {0, 1},
             {1, 0},
             {0, -1}
     };
-    static int max = Integer.MIN_VALUE;
+    static int n, q;
+    static int limit;
+    static int[][] A;
+    static List<Integer> cmd;
+    static int max = 0;
+    static int totalIce = 0;
+
+    /**
+     * 반례
+     * 2 1
+     * 0 0 0 0
+     * 0 0 0 0
+     * 0 0 0 0
+     * 0 0 0 0
+     * 0
+     * ==>이를 위해 max 디폴트값은 0으로 잡아줄 것임
+     * https://www.acmicpc.net/board/view/76134
+     */
 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,133 +40,127 @@ public class Main {
 
         n = Integer.parseInt(st.nextToken());
         q = Integer.parseInt(st.nextToken());
-        len = (int) Math.pow(2, n);
-        arr = new int[len][len];
-        list = new ArrayList<>();
 
-        for (int i = 0; i < len; i++) {
+        limit = (int) Math.pow(2, n);
+        A = new int[limit][limit];
+        cmd = new ArrayList<>();
+
+        for (int i = 0; i < limit; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < len; j++) {
-                arr[i][j] = Integer.parseInt(st.nextToken());
+
+            for (int j = 0; j < limit; j++) {
+                A[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
         st = new StringTokenizer(br.readLine());
-        list = new ArrayList<>();
 
         for (int i = 0; i < q; i++) {
-            list.add(Integer.parseInt(st.nextToken()));
+            cmd.add(Integer.parseInt(st.nextToken()));
         }
 
         for (int i = 0; i < q; i++) {
-            int stage = list.get(i);
-
-            //1.영역별로 회전시키기
-            int size = (int) Math.pow(2, stage);
-
-            for (int j = 0; j < len; j += size) {
-                for (int k = 0; k < len; k += size) {
-                    rotate(j, k, size);
-                }
-            }
-
-            //2.얼음이 3개 이상인 칸과 인접하지 않은 칸은 얼음 1씩 녹이기
-            meltIce();
+            int cur = cmd.get(i);
+            //분할+회전
+            A = divide(cur);
+            //얼음 녹이기
+            A = melt();
         }
 
-        //얼음총합
-
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
-                if (arr[i][j] <= 0) continue;
-                iceTot += arr[i][j];
-            }
-        }
-        //얼음 덩어리 가장 큰 곳 찾기
-        visited = new boolean[len][len];
-        makeGroup();
-        System.out.println(iceTot);
-        System.out.println(max);
+        //가장 큰 영역 구하기
+        findBiggest();
+        System.out.println(totalIce);
+        System.out.print(max);
     }
 
-    static void rotate(int x, int y, int size) {
-        //"2차원배열 시계방향 90도 회전" - https://redbinalgorithm.tistory.com/585
-        int[][] temp = new int[size][size];
+    static int[][] divide(int size) {
+        int[][] temp = new int[limit][limit];
+        int step = (int) Math.pow(2, size);
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                temp[j][size - i - 1] = arr[i + x][j + y];
+        for (int i = 0; i < limit; i += step) {
+            for (int j = 0; j < limit; j += step) {
+                rotate(i, j, step, temp);
             }
         }
+        return temp;
+    }
 
-        for (int i = x; i < x+size; i++) {
-            for (int j = y; j < y+size; j++) {
-                arr[i][j] = temp[i-x][j-y];
+    static void rotate(int r, int c, int width, int[][] arr) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < width; j++) {
+                arr[r + j][c + width - i - 1] = A[r + i][c + j];
             }
         }
     }
 
-    static void meltIce() {
-        //인접한 칸들 중 얼음이 있는 칸이 3개 이상이 아닌 경우는 얼음양 1씩 줄이기
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
-                if (arr[i][j] == 0) continue;//얼음이 없으면 볼 필요 없음
-                //인접칸 세기
-                int adj = 0;
+    static int[][] melt() {
+        int[][] temp = new int[limit][limit];
 
+        for (int i = 0; i < limit; i++) {
+            temp[i] = Arrays.copyOf(A[i], limit);
+        }
+
+        for (int i = 0; i < limit; i++) {
+            for (int j = 0; j < limit; j++) {
+                int cnt = 0;
+
+                //얼음없는 칸은 스킵
+                if (A[i][j] == 0) continue;
                 for (int k = 0; k < 4; k++) {
                     int nr = i + dir[k][0];
                     int nc = j + dir[k][1];
 
-                    if (nr < 0 || nc < 0 || nr >= len || nc >= len) continue;
-                    if (arr[nr][nc] <= 0) continue;
-                    adj++;
-                }
+                    if (nr < 0 || nc < 0 || nr >= limit || nc >= limit) continue;
+                    if (A[nr][nc] <= 0) continue;
 
-                //얼음 녹이기(얼음총합도 --)
-                if (adj < 3) {
-                    arr[i][j]--;
+                    cnt++;
                 }
+                //인접한 칸에 얼음이 남아 있는 곳이 3칸 미만이면 얼음 녹이기
+                if (cnt < 3) temp[i][j]--;
             }
         }
+
+        return temp;
     }
 
-    //얼음군집
-    static void makeGroup() {
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < len; j++) {
-                if (visited[i][j]) continue;
-                if (arr[i][j] <= 0) continue;
-
-                int cnt = bfs(i, j);
-                max = Math.max(max, cnt);
-            }
-        }
-    }
-
-    static int bfs(int r, int c) {
+    static void findBiggest() {
         Queue<int[]> queue = new LinkedList<>();
-        queue.add(new int[]{r, c});
-        visited[r][c] = true;
-        int cnt = 1;
+        boolean[][] visited = new boolean[limit][limit];
 
-        while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
+        totalIce = 0;
+        for (int i = 0; i < limit; i++) {
+            for (int j = 0; j < limit; j++) {
+                if (A[i][j] <= 0) continue;
+                if (visited[i][j]) continue;
 
-            for (int i = 0; i < 4; i++) {
-                int nr = cur[0] + dir[i][0];
-                int nc = cur[1] + dir[i][1];
+                //방문처리
+                visited[i][j] = true;
+                queue.add(new int[]{i, j});
+                totalIce += A[i][j];
+                int local = 1;
 
-                if (nr < 0 || nc < 0 || nr >= len || nc >= len) continue;
-                if (visited[nr][nc]) continue;
-                if (arr[nr][nc] <= 0) continue;
+                while (!queue.isEmpty()) {
+                    int[] cur = queue.poll();
+                    int r = cur[0];
+                    int c = cur[1];
 
-                queue.add(new int[]{nr, nc});
-                visited[nr][nc] = true;
-                cnt++;
+                    for (int k = 0; k < 4; k++) {
+                        int nr = r + dir[k][0];
+                        int nc = c + dir[k][1];
+
+                        if (nr < 0 || nc < 0 || nr >= limit || nc >= limit) continue;
+                        if (A[nr][nc] <= 0) continue;
+                        if (visited[nr][nc]) continue;
+
+                        local++;
+                        visited[nr][nc] = true;
+                        queue.add(new int[]{nr, nc});
+                        totalIce += A[nr][nc];
+                    }
+                }
+
+                max = Math.max(max, local);
             }
         }
-
-        return cnt;
     }
 }
