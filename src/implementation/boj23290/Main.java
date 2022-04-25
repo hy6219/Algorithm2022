@@ -72,6 +72,7 @@ public class Main {
             {1, 0},
             {1, -1}
     };
+    static boolean[][] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -82,6 +83,7 @@ public class Main {
         s = Integer.parseInt(st.nextToken());
         map = new Board[5][5];
         copyMap = new Board[5][5];
+        visited = new boolean[5][5];
 
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
@@ -121,17 +123,17 @@ public class Main {
 
         while (trial <= s) {
             //1.복제마법시작 전 배열 복사
-            copy(map, copyMap);
+            copy(map, copyMap,trial);
             //2.모든 물고기 1칸 이동
             moveFishes();
             //3.상어3칸이동
-            moveShark();
+            moveShark(trial);
             //4.현재연습-2의 냄새 제거
             removeSmell(trial);
             //5.copyMagic
             copyMagic();
             //6.copyMap결과 옮겨주기
-            copy(copyMap, map);
+            copy(copyMap, map,trial);
             trial++;
         }
         System.out.println("map: " + Arrays.deepToString(map));
@@ -151,13 +153,14 @@ public class Main {
     }
 
     //1.이동하기 전 카피!
-    static void copy(Board[][] from, Board[][] to) {
+    static void copy(Board[][] from, Board[][] to, int trial) {
         for (int i = 1; i < from.length; i++) {
             for (int j = 1; j < to.length; j++) {
                 List<Fish> fishes = from[i][j].fishes;
                 List<Fish> temp = new ArrayList<>();
                 if (fishes == null || fishes.isEmpty()) continue;
                 for (Fish fish : fishes) {
+                    fish.smell = trial;
                     temp.add(fish);
                 }
                 to[i][j].fishes = temp;
@@ -186,7 +189,7 @@ public class Main {
                         //격자 범위 외는 이동 못합
                         if (nr <= 0 || nc <= 0 || nr > 4 || nc > 4) continue;
                         //냄새가 있는 칸으로 이동 못함
-                        if (copyMap[nr][nc].smells != null || !copyMap[nr][nc].smells.isEmpty()) continue;
+                        if (copyMap[nr][nc].smells != null || !copyMap[nr][nc].smells.isEmpty() || copyMap[nr][nc].smells.size() > 0) continue;
 
                         //물고기 이동
                         fish.r = nr;
@@ -212,7 +215,7 @@ public class Main {
     }
 
     //3.상어 3칸 이동
-    static void moveShark() {
+    static void moveShark(int trial) {
         int[][] d = {
                 {-1, 0},
                 {1, 0},
@@ -220,7 +223,9 @@ public class Main {
                 {0, 1}
         };
 
+
         for (int move = 0; move < 3; move++) {
+            visited[sr][sc] = true;
             for (int i = 0; i < 4; i++) {
                 int nr = sr + d[i][0];
                 int nc = sc + d[i][1];
@@ -230,22 +235,12 @@ public class Main {
                 //해당 칸에 물고기가 있다면 그 물고기는 격자에서 제거되고,냄새를 남김
                 List<Fish> fishes = copyMap[nr][nc].fishes;
 
+                //방문한 적이 있고, 그 칸에 물고기가 있다면 물고기를 먹으면 안됨
                 //물고기를 먹은 칸에만 냄새를 남김
-                if(fishes != null && !fishes.isEmpty()){
-                    if(copyMap[nr][nc].smells == null || copyMap[nr][nc].smells.isEmpty()){
-                        copyMap[nr][nc].smells = new ArrayList<>();
-
-                        for(int z = 0 ; z < fishes.size();z++){
-                            copyMap[nr][nc].smells.add(fishes.get(z).smell);
-                        }
-                    }else{
-                        for(int z = 0 ; z < fishes.size();z++){
-                            copyMap[nr][nc].smells.add(fishes.get(z).smell);
-                        }
-                    }
+                if(!visited[nr][nc] && fishes != null && !fishes.isEmpty()){
+                    copyMap[nr][nc].smells.add(trial);
+                    copyMap[nr][nc].fishes.clear();
                 }
-
-                copyMap[nr][nc].fishes.clear();
 
                 sr = nr;
                 sc = nc;
@@ -257,8 +252,10 @@ public class Main {
     static void removeSmell(int trial) {
         for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 4; j++) {
+                if(copyMap[i][j].smells == null || copyMap[i][j].smells.isEmpty()) continue;
                 if (copyMap[i][j].smells.contains(trial - 2)) {
-                    copyMap[i][j].smells.clear();
+                    int idx = copyMap[i][j].smells.indexOf(trial-2);
+                    copyMap[i][j].smells.remove(idx);
                 }
             }
         }
