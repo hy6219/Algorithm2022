@@ -71,8 +71,6 @@ Q
 !src/bruteforce/boj14888/Main.java,5\4\54a0a363905d43d13f92bedff31327f7b232a531
 Q
 !src/bruteforce/boj14889/Main.java,7\9\796c686616fd45a15bc406775c16ae1db4a8be7d
-T
-$src/implementation/boj5373/Main.java,9\b\9bb575a65e4b1864fa709b328ca7a0e2302cddfc
 I
 src/dfs/boj2644/Main.java,5\d\5dbc052fd8986b04640d5c26a364dc00c9e2fee2
 J
