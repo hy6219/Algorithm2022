@@ -17,7 +17,7 @@ public class Remain {
         private char[][] right = new char[3][3];
 
         public void init() {
-            for(int i = 0; i < 3; i++){
+            for (int i = 0; i < 3; i++) {
                 Arrays.fill(up[i], 'w');
                 Arrays.fill(down[i], 'y');
                 Arrays.fill(front[i], 'r');
@@ -47,81 +47,133 @@ public class Remain {
          * @param plane
          */
         private void rotateClock(char plane) {
+            if (plane == 'U') {
+                char[] temp = {back[2][2], back[2][1], back[2][0]};
 
-            char[][] temp = new char[3][3];
+                up = rotateThisPlane(up);
 
-            if (plane == 'F') {
-                //앞면 회전
-                for (int i = 0; i < 3; i++) {
-                    temp[i] = up[i].clone();
-                }
+                back[2][2] = left[0][0];
+                back[2][1] = left[0][1];
+                back[2][0] = left[0][2];
 
-                for (int i = 0; i < 3; i++) {
-                    up[2][i] = left[2-i][2];
-                    left[2-i][2] = down[0][2-i];
-                    down[0][2-i] = right[i][0];
-                    right[i][0] = temp[2][i];
-                }
+                left[0][0] = front[0][0];
+                left[0][1] = front[0][1];
+                left[0][2] = front[0][2];
+
+                front[0][0] = right[0][0];
+                front[0][1] = right[0][1];
+                front[0][2] = right[0][2];
+
+                right[0][0] = temp[0];
+                right[0][1] = temp[1];
+                right[0][2] = temp[2];
+            } else if (plane == 'D') {
+                char[] temp = {front[2][2], front[2][1], front[2][0]};
+
+                down = rotateThisPlane(down);
+
+                front[2][2] = left[2][2];
+                front[2][1] = left[2][1];
+                front[2][0] = left[2][0];
+
+                left[2][2] = back[0][0];
+                left[2][1] = back[0][1];
+                left[2][0] = back[0][2];
+
+                back[0][0] = right[2][2];
+                back[0][1] = right[2][1];
+                back[0][2] = right[2][0];
+
+                right[2][2] = temp[0];
+                right[2][1] = temp[1];
+                right[2][0] = temp[2];
+            } else if (plane == 'F') {
+                char[] temp = {up[2][2], up[2][1], up[2][0]};
+
+                /**
+                 * 앞면도 돌아감
+                 */
+                front = rotateThisPlane(front);
+
+                up[2][2] = left[0][2];
+                up[2][1] = left[1][2];
+                up[2][0] = left[2][2];
+
+                left[0][2] = down[0][0];
+                left[1][2] = down[0][1];
+                left[2][2] = down[0][2];
+
+                down[0][0] = right[2][0];
+                down[0][1] = right[1][0];
+                down[0][2] = right[0][0];
+
+                right[2][0] = temp[0];
+                right[1][0] = temp[1];
+                right[0][0] = temp[2];
             } else if (plane == 'B') {
-                //뒷면 회전
-                for (int i = 0; i < 3; i++) {
-                    temp[i] = up[i].clone();
-                }
+                char[] temp = {down[2][2], down[2][1], down[2][0]};
 
-                for (int i = 0; i < 3; i++) {
-                    up[0][i] = right[i][2];
-                    right[i][2] = down[2][2-i];
-                    down[2][2-i] = left[2-i][0];
-                    left[2-i][0] = temp[0][i];
-                }
-            } else if (plane == 'R') {
-                //우쪽 회전
-                for (int i = 0; i < 3; i++) {
-                    temp[i] = up[i].clone();
-                }
+                /*
+                 * 뒷면도 돌아감
+                 */
+                back = rotateThisPlane(back);
 
-                for (int i = 0; i < 3; i++) {
-                    up[i][2] = front[i][2];
-                    front[i][2] = down[i][2];
-                    down[i][2] = back[2-i][0];
-                    back[2-i][0] = temp[i][2];
-                }
+                down[2][2] = left[2][0];
+                down[2][1] = left[1][0];
+                down[2][0] = left[0][0];
+
+                left[2][0] = up[0][0];
+                left[1][0] = up[0][1];
+                left[0][0] = up[0][2];
+
+                up[0][0] = right[0][2];
+                up[0][1] = right[1][2];
+                up[0][2] = right[2][2];
+
+                right[0][2] = temp[0];
+                right[1][2] = temp[1];
+                right[2][2] = temp[2];
+
             } else if (plane == 'L') {
-                //왼쪽 회전
-                for (int i = 0; i < 3; i++) {
-                    temp[i] = up[i].clone();
-                }
+                char[] temp = {back[0][0], back[1][0], back[2][0]};
 
-                for (int i = 0; i < 3; i++) {
-                    up[i][0] = back[2 - i][2];
-                    back[2 - i][2] = down[i][0];
-                    down[i][0] = front[i][0];
-                    front[i][0] = temp[i][0];
-                }
-            } else if (plane == 'U') {
-                //윗면 회전
-                for (int i = 0; i < 3; i++) {
-                    temp[i] = front[i].clone();
-                }
+                left = rotateThisPlane(left);
 
-                for (int i = 0; i < 3; i++) {
-                    front[0][i] = right[0][i];
-                    right[0][i] = back[0][i];
-                    back[0][i] = left[0][i];
-                    left[0][i] = temp[0][i];
-                }
-            } else {
-                //밑면 회전
-                for (int i = 0; i < 3; i++) {
-                    temp[i] = front[i].clone();
-                }
+                back[0][0] = down[0][0];
+                back[1][0] = down[1][0];
+                back[2][0] = down[2][0];
 
-                for (int i = 0; i < 3; i++) {
-                    front[2][i] = left[2][i];
-                    left[2][i] = back[2][i];
-                    back[2][i] = right[2][i];
-                    right[2][i] = temp[2][i];
-                }
+                down[0][0] = front[0][0];
+                down[1][0] = front[1][0];
+                down[2][0] = front[2][0];
+
+                front[0][0] = up[0][0];
+                front[1][0] = up[1][0];
+                front[2][0] = up[2][0];
+
+                up[0][0] = temp[0];
+                up[1][0] = temp[1];
+                up[2][0] = temp[2];
+            } else if (plane == 'R') {
+                char[] temp = {up[0][2], up[1][2], up[2][2]};
+
+                right = rotateThisPlane(right);
+
+                up[0][2] = front[0][2];
+                up[1][2] = front[1][2];
+                up[2][2] = front[2][2];
+
+                front[0][2] = down[0][2];
+                front[1][2] = down[1][2];
+                front[2][2] = down[2][2];
+
+                down[0][2] = back[0][2];
+                down[1][2] = back[1][2];
+                down[2][2] = back[2][2];
+
+                back[0][2] = temp[0];
+                back[1][2] = temp[1];
+                back[2][2] = temp[2];
             }
         }
 
@@ -136,16 +188,38 @@ public class Remain {
             }
         }
 
-        public String getUpperPlane(){
+        public String getUpperPlane() {
             StringBuilder sb = new StringBuilder();
 
-            for(int i = 0 ; i < 3; i++){
-                for(int j = 0 ; j < 3; j++){
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
                     sb.append(up[i][j]);
                 }
                 sb.append('\n');
             }
             return sb.toString();
+        }
+
+        /**
+         * 해당 면 좌표 시계방향 90도 회전
+         */
+        static char[][] rotateThisPlane(char[][] arr) {
+
+            char[][] temp = new char[3][3];
+
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp[i][j] = arr[2 - j][i];
+                }
+            }
+
+            for (int r = 0; r < 3; r++) {
+                for (int c = 0; c < 3; c++) {
+                    arr[r][c] = temp[r][c];
+                }
+            }
+
+            return arr;
         }
     }
 
@@ -180,6 +254,7 @@ public class Remain {
 
             //윗면 출력
             sb.append(dice.getUpperPlane());
+
         }
         System.out.print(sb);
     }
